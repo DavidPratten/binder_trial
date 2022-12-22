@@ -1,4 +1,4 @@
-# How to build image https://docs.docker.com/engine/reference/commandline/build/ 
+# How to build image https://docs.docker.com/engine/reference/commandline/build/  
 # > cd into this folder
 # > docker build -t <image_name> .
 # (no tag no work)
