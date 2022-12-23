@@ -23,7 +23,7 @@ RUN mamba install --quiet --yes sqlglot
 
 # Install Optimathsat https://optimathsat.disi.unitn.it/
 COPY optimathsat /usr/bin
-RUN chmod u+x /usr/bin/optimathsat
+RUN chmod 755 /usr/bin/optimathsat
 # Install ACT_Conveyance_Duty.ipynb
 COPY work/query_idr_magic.py /home/${NB_USER}/work
 COPY work/idr_query.py /home/${NB_USER}/work
