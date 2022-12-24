@@ -33,4 +33,4 @@ COPY ACT_Conveyance_Duty.ipynb /home/${NB_USER}
 # Return to User level
 USER ${NB_UID}
 
-EXPOSE 8888
+
