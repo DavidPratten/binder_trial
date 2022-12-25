@@ -17,7 +17,7 @@ USER root
 # Install MiniZinc https://www.minizinc.org/
 RUN apt-get update
 RUN apt-get install --yes minizinc
-
+RUN apt-get install --yes python3-pip
 # Install Python 3 packages
 RUN mamba install --quiet --yes sqlglot
 
