@@ -33,7 +33,7 @@ COPY work/query_idr_magic.py /home/${NB_USER}/work
 COPY work/idr_query.py /home/${NB_USER}/work
 COPY work/act_conveyance_duty.mzn /home/${NB_USER}/work
 COPY ACT_Conveyance_Duty.ipynb /home/${NB_USER}
-
+COPY test_idr_query.py /home/${NB_USER}
 # Return to User level
 USER ${NB_UID}
 
