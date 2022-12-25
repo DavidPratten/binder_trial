@@ -1,3 +1,5 @@
+# ok this works.
+# next step is to start tests in the image and get results!
 name: CI
 on: [workflow_dispatch]
 jobs:
