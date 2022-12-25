@@ -15,7 +15,8 @@ jobs:
         - my_docker_volume:/volume_mount
       options: --cpus 1
     steps:
-      - name: Show what is there
-        run: ls /home/jovyan/work
+      # The CD is required because when a container is run by Github the working directory is set by
+      # GITHUB_WORKSPACE environment variable and defaults to /home/runner/work/my-repo-name/my-repo-name.
+      # jovyan is the default non-root username chosen by Docker when building the image
       - name: Run tests
         run: cd /home/jovyan && py.test
