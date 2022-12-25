@@ -7,7 +7,7 @@
 # To get a newer version, you will need to update the SHA.
 # You can also reference a tag or branch, but the action may change without warning.
 
-name: Create and publish a Docker image
+name: Create Publish And Test Docker image
 
 on:
   release:
@@ -48,3 +48,20 @@ jobs:
           push: true
           tags: ${{ steps.meta.outputs.tags }}
           labels: ${{ steps.meta.outputs.labels }}
+  container-test-job:
+    runs-on: ubuntu-latest
+    container:
+      image: ghcr.io/davidpratten/binder_trial:latest
+      env:
+        NODE_ENV: development
+      ports:
+        - 80
+      volumes:
+        - my_docker_volume:/volume_mount
+      options: --cpus 1
+    steps:
+      # The CD is required because when a container is run by Github the working directory is set by
+      # GITHUB_WORKSPACE environment variable and defaults to /home/runner/work/my-repo-name/my-repo-name.
+      # jovyan is the default non-root username chosen by Docker when building the image
+      - name: Run tests
+        run: cd /home/jovyan && py.test
