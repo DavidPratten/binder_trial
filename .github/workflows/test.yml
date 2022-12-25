@@ -1,7 +1,7 @@
 on: [workflow_dispatch]
 jobs:
   run_test:
-    runs-on: ubuntu-latest
+    runs-on: docker pull ghcr.io/davidpratten/binder_trial:v0.1.3-alpha
     steps:
     - uses: actions/checkout@v3
     - name: Set up Python
