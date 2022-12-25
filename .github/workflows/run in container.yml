@@ -15,5 +15,7 @@ jobs:
         - my_docker_volume:/volume_mount
       options: --cpus 1
     steps:
-      - name: Check for dockerenv file
+      - name: Show what is there
+        run: ls /home/jovyan
+      - name: Run tests
         run: py.test /home/jovyan
