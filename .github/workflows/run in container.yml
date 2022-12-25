@@ -4,7 +4,7 @@ jobs:
   container-test-job:
     runs-on: ubuntu-latest
     container:
-      image: node:14.16
+      image: ghcr.io/davidpratten/binder_trial:latest
       env:
         NODE_ENV: development
       ports:
