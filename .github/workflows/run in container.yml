@@ -18,4 +18,4 @@ jobs:
       - name: Show what is there
         run: ls /home/jovyan/work
       - name: Run tests
-        run: py.test /home/jovyan
+        run: cd /home/jovyan && py.test
