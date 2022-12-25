@@ -1,6 +1,5 @@
 name: CI
-on:
-  demand
+on: [workflow_dispatch]
 jobs:
   container-test-job:
     runs-on: ubuntu-latest
