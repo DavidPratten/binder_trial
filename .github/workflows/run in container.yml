@@ -16,6 +16,6 @@ jobs:
       options: --cpus 1
     steps:
       - name: Show what is there
-        run: ls /home/jovyan
+        run: ls /home/jovyan/work
       - name: Run tests
         run: py.test /home/jovyan
