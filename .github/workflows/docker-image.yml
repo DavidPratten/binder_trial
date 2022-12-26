@@ -69,6 +69,6 @@ jobs:
         # Whereas for reasons that are not immediately apparent, having the current directory on the
         # python's sys path is a prerequisite when the test holding .py files are at lower levels in the
         # folder hierarchy and running python -m pytest instead of just pytest accomplishes that :-)
-        run: cd /home/jovyan && python -m pytest
+        run: cd /home/jovyan && python -m pytest src/
       - name: Run .ipynb tests
         run: cd /home/jovyan && python -m pytest --nbmake -n=auto
