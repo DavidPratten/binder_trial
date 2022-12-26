@@ -26,7 +26,7 @@ COPY src/requirements.txt /home/${NB_USER}/src
 RUN pip install -r /home/${NB_USER}/src/requirements.txt
 
 # Install Optimathsat https://optimathsat.disi.unitn.it/
-COPY optimathsat /usr/bin
+COPY bin/optimathsat /usr/bin
 RUN chmod 755 /usr/bin/optimathsat
 # Install ACT_Conveyance_Duty.ipynb
 COPY src/query_idr_magic.py /home/${NB_USER}/src
