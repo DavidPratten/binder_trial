@@ -1,4 +1,0 @@
-sqlglot
-pytest
-nbmake
-pytest-xdist
