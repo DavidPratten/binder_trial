@@ -1,7 +1,7 @@
 # How to build image https://docs.docker.com/engine/reference/commandline/build/  
 # > cd into this folder
 # > docker build -t <image_name> .
-# (no tag no src)
+# (no tag no srcx)
 # How to run it https://docs.docker.com/engine/reference/commandline/run/
 # > docker run -p 8888:8888 <image_name>
 # Or actually more convenient from the docker UI, but remember to map 8888 to 8888
@@ -22,18 +22,18 @@ RUN apt-get install --yes minizinc
 RUN apt-get install --yes python3-pip
 
 # Install Python 3 packages
-COPY src/requirements.txt /home/${NB_USER}/src
-RUN pip install -r /home/${NB_USER}/src/requirements.txt
+COPY srcx/requirements.txt /home/${NB_USER}/srcx
+RUN pip install -r /home/${NB_USER}/srcx/requirements.txt
 
 # Install Optimathsat https://optimathsat.disi.unitn.it/
 COPY bin/optimathsat /usr/bin
 RUN chmod 755 /usr/bin/optimathsat
 # Install ACT_Conveyance_Duty.ipynb
-COPY src/query_idr_magic.py /home/${NB_USER}/src
-COPY src/idr_query.py /home/${NB_USER}/src
-COPY src/act_conveyance_duty.mzn /home/${NB_USER}/src
+COPY srcx/query_idr_magic.py /home/${NB_USER}/srcx
+COPY srcx/idr_query.py /home/${NB_USER}/srcx
+COPY srcx/act_conveyance_duty.mzn /home/${NB_USER}/srcx
 COPY ACT_Conveyance_Duty.ipynb /home/${NB_USER}
-COPY src/test_idr_query.py /home/${NB_USER}/src
+COPY srcx/test_idr_query.py /home/${NB_USER}/srcx
 # Return to User level
 USER ${NB_UID}
 
