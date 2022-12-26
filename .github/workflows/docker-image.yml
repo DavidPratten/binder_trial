@@ -65,4 +65,4 @@ jobs:
       # GITHUB_WORKSPACE environment variable and defaults to /home/runner/work/my-repo-name/my-repo-name.
       # jovyan is the default non-root username chosen by Docker when building the image
       - name: Run tests
-        run: cd /home/jovyan && pytest
+        run: cd /home/jovyan && python -m pytest
