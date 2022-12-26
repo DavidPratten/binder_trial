@@ -35,6 +35,7 @@ COPY jetisu/idr_query.py /home/${NB_USER}/jetisu/
 COPY jetisu/act_conveyance_duty.mzn /home/${NB_USER}/jetisu/
 COPY ACT_Conveyance_Duty.ipynb /home/${NB_USER}
 COPY jetisu/test_idr_query.py /home/${NB_USER}/jetisu/
+RUN rmdir /home/${NB_USER}/work
 # Return to User level
 USER ${NB_UID}
 
