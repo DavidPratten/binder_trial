@@ -64,5 +64,9 @@ jobs:
       # The CD is required because when a container is run by Github the working directory is set by
       # GITHUB_WORKSPACE environment variable and defaults to /home/runner/work/my-repo-name/my-repo-name.
       # jovyan is the default non-root username chosen by Docker when building the image
+
+      # Whereas for reasons that are not immediately apparent, having the current directory on the
+      # python's sys path is a prerequisite when the test holding .py files are at lower levels in the
+      # folder hierarchy and running python -m pytest instead of just pytest accomplishes that :-)
       - name: Run tests
         run: cd /home/jovyan && python -m pytest
