@@ -1,4 +1,4 @@
-from work.idr_query import idr_query
+from src.idr_query import idr_query
 
 
 def test_idr_query1():

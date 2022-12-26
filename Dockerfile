@@ -22,18 +22,18 @@ RUN apt-get install --yes minizinc
 RUN apt-get install --yes python3-pip
 
 # Install Python 3 packages
-COPY work/requirements.txt /home/${NB_USER}/work
-RUN pip install -r /home/${NB_USER}/work/requirements.txt
+COPY src/requirements.txt /home/${NB_USER}/src
+RUN pip install -r /home/${NB_USER}/src/requirements.txt
 
 # Install Optimathsat https://optimathsat.disi.unitn.it/
 COPY optimathsat /usr/bin
 RUN chmod 755 /usr/bin/optimathsat
 # Install ACT_Conveyance_Duty.ipynb
-COPY work/query_idr_magic.py /home/${NB_USER}/work
-COPY work/idr_query.py /home/${NB_USER}/work
-COPY work/act_conveyance_duty.mzn /home/${NB_USER}/work
+COPY src/query_idr_magic.py /home/${NB_USER}/src
+COPY src/idr_query.py /home/${NB_USER}/src
+COPY src/act_conveyance_duty.mzn /home/${NB_USER}/src
 COPY ACT_Conveyance_Duty.ipynb /home/${NB_USER}
-COPY work/test_idr_query.py /home/${NB_USER}/work
+COPY src/test_idr_query.py /home/${NB_USER}/src
 # Return to User level
 USER ${NB_UID}
 
