@@ -1,4 +1,4 @@
-from src.idr_query import idr_query
+from jetisu.idr_query import idr_query
 
 
 def test_idr_query1():

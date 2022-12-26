@@ -98,7 +98,7 @@ def idr_query(SQL, return_data=True):
 
     # In[538]:
 
-    with open('src/'+table_name.lower() + '.mzn', 'r') as file:
+    with open('jetisu/'+table_name.lower() + '.mzn', 'r') as file:
         model = file.read()
     # print(model)
 

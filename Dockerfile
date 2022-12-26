@@ -29,11 +29,11 @@ RUN pip install -r /home/${NB_USER}/requirements.txt
 COPY bin/optimathsat /usr/bin
 RUN chmod 755 /usr/bin/optimathsat
 # Install ACT_Conveyance_Duty.ipynb
-COPY src/query_idr_magic.py /home/${NB_USER}/src
-COPY src/idr_query.py /home/${NB_USER}/src
-COPY src/act_conveyance_duty.mzn /home/${NB_USER}/src
+COPY jetisu/query_idr_magic.py /home/${NB_USER}/jetisu
+COPY jetisu/idr_query.py /home/${NB_USER}/jetisu
+COPY jetisu/act_conveyance_duty.mzn /home/${NB_USER}/jetisu
 COPY ACT_Conveyance_Duty.ipynb /home/${NB_USER}
-COPY src/test_idr_query.py /home/${NB_USER}/src
+COPY jetisu/test_idr_query.py /home/${NB_USER}/jetisu
 # Return to User level
 USER ${NB_UID}
 
