@@ -61,7 +61,7 @@ jobs:
         - my_docker_volume:/volume_mount
       options: --cpus 1
     steps:
-      - name: Run tests
+      - name: Run .py tests
         # The CD is required because when a container is run by Github the working directory is set by
         # GITHUB_WORKSPACE environment variable and defaults to /home/runner/work/my-repo-name/my-repo-name.
         # jovyan is the default non-root username chosen by Docker when building the image
@@ -70,3 +70,5 @@ jobs:
         # python's sys path is a prerequisite when the test holding .py files are at lower levels in the
         # folder hierarchy and running python -m pytest instead of just pytest accomplishes that :-)
         run: cd /home/jovyan && python -m pytest
+      - name: Run .ipynb tests
+        run: cd /home/jovyan && python -m pytest --nbmake -n=auto
