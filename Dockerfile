@@ -24,7 +24,7 @@ RUN apt-get install --yes python3-pip
 # Install Python 3 packages
 COPY requirements.txt /home/${NB_USER}
 RUN pip install -r /home/${NB_USER}/requirements.txt
-
+RUN rm /home/${NB_USER}/requirements.txt
 # Install Optimathsat https://optimathsat.disi.unitn.it/
 COPY bin/optimathsat /usr/bin
 RUN chmod 755 /usr/bin/optimathsat
