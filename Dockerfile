@@ -22,8 +22,8 @@ RUN apt-get install --yes minizinc
 RUN apt-get install --yes python3-pip
 
 # Install Python 3 packages
-COPY src/requirements.txt /home/${NB_USER}/src
-RUN pip install -r /home/${NB_USER}/src/requirements.txt
+COPY requirements.txt /home/${NB_USER}
+RUN pip install -r /home/${NB_USER}/requirements.txt
 
 # Install Optimathsat https://optimathsat.disi.unitn.it/
 COPY bin/optimathsat /usr/bin
