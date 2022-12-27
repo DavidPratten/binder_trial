@@ -33,7 +33,7 @@ RUN mkdir /home/${NB_USER}/jetisu
 COPY jetisu/query_idr_magic.py /home/${NB_USER}/jetisu/
 COPY jetisu/idr_query.py /home/${NB_USER}/jetisu/
 COPY jetisu/act_conveyance_duty.mzn /home/${NB_USER}/jetisu/
-COPY ACT_Conveyance_Duty.ipynb /home/${NB_USER}
+COPY *.ipynb /home/${NB_USER}
 COPY jetisu/test_idr_query.py /home/${NB_USER}/jetisu/
 RUN rmdir /home/${NB_USER}/work
 # Return to User level
