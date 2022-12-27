@@ -11,6 +11,8 @@ import json
 import os
 import tempfile
 import sys
+import re
+
 
 def idr_query(SQL, return_data=True):
 
@@ -97,14 +99,22 @@ def idr_query(SQL, return_data=True):
     # print(too_complex)
 
     # In[538]:
-
-    with open('jetisu/'+table_name.lower() + '.mzn', 'r') as file:
+    canonical_table_name = table_name.lower()
+    with open('jetisu/'+canonical_table_name  + '.mzn', 'r') as file:
         model = file.read()
     # print(model)
 
     # Merge in the constraints in the query to get the model to be fed to MiniZinc
 
-    model += "\n" + where_clause.replace("WHERE", "constraint").replace("AND", "/\\").replace("OR", "\\/") + ";"
+    parameters = re.search("predicate +"+canonical_table_name +" *\(([^\)]+?)\)",model, re.S)[1]
+    variables = parameters.replace(",",";")+";"
+    primary_constraint = 'constraint '+canonical_table_name +'('+', '.join([x.split(":")[1] for x in parameters.split(",")])+');'
+
+    # print(variables)
+    # print(primary_constraint)
+
+    model += "\n"+variables+"\n"+primary_constraint+"\n" + where_clause.replace("WHERE", "constraint").replace("AND", "/\\").replace("OR", "\\/") + ";"
+    print(model)
     model_fn = tempfile.NamedTemporaryFile().name
     mf = open(model_fn + ".mzn", 'w')
     mf.write(model)

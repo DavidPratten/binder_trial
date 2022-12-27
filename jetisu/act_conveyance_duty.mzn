@@ -8,7 +8,7 @@ let {
 
 
 
-predicate ACT_Conveyance_Duty(var bool: non_commercial, 
+predicate act_conveyance_duty(var bool: non_commercial, 
                               var bool: eligible_owner_occupier, 
                               var int:price, 
                               var float:duty) = 
@@ -60,13 +60,6 @@ let {
   endif
 } 
 in true;
-
-
-var bool: non_commercial;
-var bool: eligible_owner_occupier;
-var int: price;
-var float: duty;
-constraint ACT_Conveyance_Duty(non_commercial, eligible_owner_occupier, price, duty);  
 
 
 
