@@ -64,13 +64,13 @@ def idr_query(SQL, return_data=True):
                 found_Not = True
                 continue
             if isinstance(node_tuple[0], exp.Column):
-                eq_constraints[str(node_tuple[0])] = True
+                eq_constraints[str(node_tuple[0]).lower()] = True
                 continue
             too_complex = True
             continue
         if found_constraints and found_EQ and column_name == '':
             if isinstance(node_tuple[0], exp.Column):
-                column_name = str(node_tuple[0])
+                column_name = str(node_tuple[0]).lower()
                 continue
             too_complex = True
             continue
@@ -87,7 +87,7 @@ def idr_query(SQL, return_data=True):
             continue
         if found_constraints and found_Not:
             if isinstance(node_tuple[0], exp.Column):
-                eq_constraints[str(node_tuple[0])] = False
+                eq_constraints[str(node_tuple[0]).lower()] = False
                 found_Not = False
                 continue
             too_complex = True
@@ -106,15 +106,17 @@ def idr_query(SQL, return_data=True):
 
     # Merge in the constraints in the query to get the model to be fed to MiniZinc
 
-    parameters = re.search("predicate +"+canonical_table_name +" *\(([^\)]+?)\)",model, re.S)[1]
+    parameters = re.search("predicate +"+canonical_table_name +" *\(([^\)]+?)\)",model, re.S)[1].lower()
     variables = parameters.replace(",",";")+";"
     primary_constraint = 'constraint '+canonical_table_name +'('+', '.join([x.split(":")[1] for x in parameters.split(",")])+');'
 
     # print(variables)
     # print(primary_constraint)
 
-    model += "\n"+variables+"\n"+primary_constraint+"\n" + where_clause.replace("WHERE", "constraint").replace("AND", "/\\").replace("OR", "\\/") + ";"
-    print(model)
+    where_clause_data = '; '.join([ (x+"= true" if len(x.split("="))==1 else x) for x in where_clause.lower().replace("where", "").split("and")])
+    # print(where_clause_list)
+    model += "\n"+variables+"\n"+primary_constraint+"\n" + where_clause_data + ";"
+    # print(model)
     model_fn = tempfile.NamedTemporaryFile().name
     mf = open(model_fn + ".mzn", 'w')
     mf.write(model)
