@@ -14,7 +14,9 @@ import sys
 import re
 
 
-def idr_query(SQL, return_data=True):
+def idr_query(SQL, return_data):
+
+    assert return_data in ['data', 'markdown table', 'model', 'constrained model']
 
     # handles a conjuction of simple constraint clauses only TODO Generalise this code.
     table_name = ''
@@ -100,26 +102,28 @@ def idr_query(SQL, return_data=True):
 
     # In[538]:
     canonical_table_name = table_name.lower()
-    with open('jetisu/'+canonical_table_name  + '.mzn', 'r') as file:
+    with open('jetisu/' + canonical_table_name + '.mzn', 'r') as file:
         model = file.read()
     # print(model)
 
     # Merge in the constraints in the query to get the model to be fed to MiniZinc
 
-    parameters = re.search("predicate +"+canonical_table_name +" *\(([^\)]+?)\)",model, re.S)[1].lower()
-    variables = parameters.replace(",",";")+";"
-    primary_constraint = 'constraint '+canonical_table_name +'('+', '.join([x.split(":")[1] for x in parameters.split(",")])+');'
+    parameters = re.search("predicate +" + canonical_table_name + " *\(([^\)]+?)\)", model, re.S)[1].lower()
+    variables = parameters.replace(",", ";") + ";"
+    primary_constraint = 'constraint ' + canonical_table_name + '(' + ', '.join(
+        [x.split(":")[1] for x in parameters.split(",")]) + ');'
 
     # print(variables)
     # print(primary_constraint)
 
-    where_clause_data = '; '.join([ (x+"= true" if len(x.split("="))==1 else x) for x in where_clause.lower().replace("where", "").split("and")])
+    where_clause_data = '; '.join([(x + "= true" if len(x.split("=")) == 1 else x) for x in
+                                   where_clause.lower().replace("where", "").split("and")])
     # print(where_clause_list)
-    model += "\n"+variables+"\n"+primary_constraint+"\n" + where_clause_data + ";"
+    constrained_model = model + "\n" + variables + "\n" + primary_constraint + "\n" + where_clause_data + ";"
     # print(model)
     model_fn = tempfile.NamedTemporaryFile().name
     mf = open(model_fn + ".mzn", 'w')
-    mf.write(model)
+    mf.write(constrained_model)
     mf.close()
 
     # print (model)
@@ -129,7 +133,8 @@ def idr_query(SQL, return_data=True):
     # In[541]:
 
     path_to_minizinc = "C:/Program Files/MiniZinc/minizinc" if sys.platform.startswith('win32') else "/usr/bin/minizinc"
-    path_to_optimathsat = "C:/Program Files/MiniZinc/bin/optimathsat" if sys.platform.startswith('win32') else "/usr/bin/optimathsat"
+    path_to_optimathsat = "C:/Program Files/MiniZinc/bin/optimathsat" if sys.platform.startswith(
+        'win32') else "/usr/bin/optimathsat"
 
     result = subprocess.run([path_to_minizinc, "--compile", model_fn + ".mzn"])
 
@@ -139,7 +144,7 @@ def idr_query(SQL, return_data=True):
     # print(result.stdout.decode('utf-8'))
 
     result = subprocess.run(
-        [ path_to_optimathsat , "-input=fzn", "-opt.fzn.max_solutions=1000",
+        [path_to_optimathsat, "-input=fzn", "-opt.fzn.max_solutions=1000",
          "-opt.fzn.finite_precision=12", "-opt.fzn.finite_precision_model=true",
          "-opt.fzn.all_solutions=true", "-opt.fzn.output_var_file=-", "-model_generation=true",
          model_fn + ".fzn"],
@@ -208,13 +213,18 @@ def idr_query(SQL, return_data=True):
     #     """select product_name, imported,  min(price) min_price from products group by product_name, imported;""",
     #     tables={'products':[{'product_name': 'Bike', 'price': 100, 'imported': True},{'product_name': 'Tent', 'price': 200, 'imported': True},{'product_name': 'Bike', 'price': 300,  'imported': False}]}
     # )
-    if return_data:
+    if return_data == 'data':
         return (res.columns, res.rows)
-    else:
+    elif return_data == 'markdown table':
         return '|' + '|'.join(res.columns) + '|' + "\n" + '|' + '|'.join(
             ["----" for x in res.columns]) + '|' + "\n" + "\n".join(
             ['|' + '|'.join([str(val) for val in r]) + '|' for r in res.rows])
-
+    elif return_data == 'model':
+        return model
+    elif return_data == 'constrained model':
+        return constrained_model
+    else:
+        return 'Programming error this should never occur'
     # print(res.columns)
     # print()
 

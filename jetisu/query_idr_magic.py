@@ -2,15 +2,15 @@ from IPython.display import display, Markdown, Latex
 from jetisu.idr_query import idr_query
 import hashlib
 def query_idr(line, cell):
-    display(Markdown(idr_query(cell, False)))
+    display(Markdown(idr_query(cell, 'markdown table')))
 def query_test(line, cell):
     print("""def test_idr_"""+hashlib.sha1(cell.strip().encode()).hexdigest()[:10]+"""():
     res = idr_query(\"\"\""""+cell+"""\"\"\", True)
-    assert sorted_res(res) == sorted_res("""+str(idr_query(cell, True))+""")""")
+    assert sorted_res(res) == sorted_res("""+str(idr_query(cell, 'data'))+""")""")
 def show_idr(line, cell):
-    with open('jetisu/'+cell.strip().lower() + '.mzn', 'r') as file:
-        model = file.read()
-    display(Markdown("```\n\n"+model+"\n```"))
+    display(Markdown("```\n\n"+idr_query(cell, 'model')+"\n```"))
+def show_constrained_idr(line, cell):
+    display(Markdown("```\n\n"+idr_query(cell, 'constrained model')+"\n```"))
 def load_ipython_extension(ipython):
     """This function is called when the extension is
     loaded. It accepts an IPython InteractiveShell
@@ -20,3 +20,4 @@ def load_ipython_extension(ipython):
     ipython.register_magic_function(query_idr, 'cell')
     ipython.register_magic_function(show_idr, 'cell')
     ipython.register_magic_function(query_test, 'cell')
+    ipython.register_magic_function(show_constrained_idr, 'cell')
