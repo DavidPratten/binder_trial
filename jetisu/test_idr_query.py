@@ -24,9 +24,9 @@ def test_idr_347d205d95():
 select * from ACT_Conveyance_Duty where price = 1200000;
 
 """, 'data')
-    assert sorted_res(res) == sorted_res((('non_commercial', 'eligible_owner_occupier', 'duty', 'price'),
-                                          [(False, False, 0, 1200000.0), (True, True, 47590, 1200000.0),
-                                           (True, False, 49750, 1200000.0)]))
+    assert sorted_res(res) == sorted_res((('non_commercial', 'eligible_owner_occupier', 'price', 'duty'),
+                                          [(False, False, 1200000.0, 0), (True, True, 1200000.0, 47590),
+                                           (True, False, 1200000.0, 49750)]))
 
 
 def test_idr_689c1ce3d5():
@@ -34,10 +34,9 @@ def test_idr_689c1ce3d5():
 select * from ACT_Conveyance_Duty where price = 2000000;
 
 """, 'data')
-    assert sorted_res(res) == sorted_res((('non_commercial', 'eligible_owner_occupier', 'duty', 'price'),
-                                          [(True, True, 90800, 2000000.0), (True, False, 90800, 2000000.0),
-                                           (False, False, 100000, 2000000.0)]))
-
+    assert sorted_res(res) == sorted_res((('non_commercial', 'eligible_owner_occupier', 'price', 'duty'),
+                                          [(True, True, 2000000.0, 90800), (True, False, 2000000.0, 90800),
+                                           (False, False, 2000000.0, 100000)]))
 
 def test_idr_4ab4e9269f():
     res = idr_query("""
@@ -84,15 +83,15 @@ group by non_commercial,
 def test_idr_83827ed0a8():
     res = idr_query("""select * from range where N=5 and From_Start=10 and To_Stop = 20;
 """, 'data')
-    assert sorted_res(res) == sorted_res((('nth', 'nth_value', 'n', 'from_start', 'to_stop'),
-                                          [(0, 10, 5.0, 10.0, 20.0), (1, 12.5, 5.0, 10.0, 20.0),
-                                           (2, 15, 5.0, 10.0, 20.0), (3, 17.5, 5.0, 10.0, 20.0),
-                                           (4, 20, 5.0, 10.0, 20.0)]))
+    assert sorted_res(res) == sorted_res((('from_start', 'to_stop', 'n', 'nth', 'nth_value'),
+                                          [(10.0, 20.0, 5.0, 0, 10), (10.0, 20.0, 5.0, 1, 12.5),
+                                           (10.0, 20.0, 5.0, 2, 15), (10.0, 20.0, 5.0, 3, 17.5),
+                                           (10.0, 20.0, 5.0, 4, 20)]))
 
 
 def test_idr_4346617aaa():
     res = idr_query("""select * from range where N=5 and To_Stop = 20 and nth_Value=15.0;
 """, 'data')
-    assert sorted_res(res) == sorted_res((('from_start', 'nth', 'n', 'to_stop', 'nth_value'),
-                                          [(15, 0, 5.0, 20.0, 15.0), (13.3333333333, 1, 5.0, 20.0, 15.0),
-                                           (10, 2, 5.0, 20.0, 15.0), (0, 3, 5.0, 20.0, 15.0)]))
+    assert sorted_res(res) == sorted_res((('from_start', 'to_stop', 'n', 'nth', 'nth_value'),
+                                          [(15, 20.0, 5.0, 0, 15.0), (13.3333333333, 20.0, 5.0, 1, 15.0),
+                                           (10, 20.0, 5.0, 2, 15.0), (0, 20.0, 5.0, 3, 15.0)]))

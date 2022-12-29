@@ -13,6 +13,9 @@ import tempfile
 import sys
 import re
 
+def idr_read_model(canonical_table_name):
+    with open('jetisu/' + canonical_table_name + '.mzn', 'r') as file:
+        return file.read()
 
 def idr_query(SQL, return_data):
 
@@ -102,8 +105,8 @@ def idr_query(SQL, return_data):
 
     # In[538]:
     canonical_table_name = table_name.lower()
-    with open('jetisu/' + canonical_table_name + '.mzn', 'r') as file:
-        model = file.read()
+    model = idr_read_model(canonical_table_name)
+
     # print(model)
 
     # Merge in the constraints in the query to get the model to be fed to MiniZinc
@@ -133,23 +136,27 @@ def idr_query(SQL, return_data):
     # In[541]:
 
     path_to_minizinc = "C:/Program Files/MiniZinc/minizinc" if sys.platform.startswith('win32') else "/usr/bin/minizinc"
-    path_to_optimathsat = "C:/Program Files/MiniZinc/bin/optimathsat" if sys.platform.startswith(
-        'win32') else "/usr/bin/optimathsat"
 
-    result = subprocess.run([path_to_minizinc, "--compile", model_fn + ".mzn"])
-
+    # path_to_optimathsat = "C:/Program Files/MiniZinc/bin/optimathsat" if sys.platform.startswith(
+    #     'win32') else "/usr/bin/optimathsat"
+    # print(constrained_model)
+    result = subprocess.run([path_to_minizinc, "--solver", "optimathsat", model_fn + ".mzn"],
+        stdout=subprocess.PIPE)
+    output = result.stdout.decode('utf-8')
+    # print('here', output)
+    #sys.exit(0)
     # In[542]:
 
     # result = subprocess.run(["C:\Program Files\MiniZinc\minizinc.exe", "-c", model_fn], stdout=subprocess.PIPE)
     # print(result.stdout.decode('utf-8'))
 
-    result = subprocess.run(
-        [path_to_optimathsat, "-input=fzn", "-opt.fzn.max_solutions=1000",
-         "-opt.fzn.finite_precision=12", "-opt.fzn.finite_precision_model=true",
-         "-opt.fzn.all_solutions=true", "-opt.fzn.output_var_file=-", "-model_generation=true",
-         model_fn + ".fzn"],
-        stdout=subprocess.PIPE)  # "-opt.fzn.output_var_file="+model_fn+"_vars.txt",
-    output = result.stdout.decode('utf-8')
+    # result = subprocess.run(
+    #     [path_to_optimathsat, "-input=fzn", "-opt.fzn.max_solutions=1000",
+    #      "-opt.fzn.finite_precision=12", "-opt.fzn.finite_precision_model=true",
+    #      "-opt.fzn.all_solutions=true", "-opt.fzn.output_var_file=-", "-model_generation=true",
+    #      model_fn + ".fzn"],
+    #     stdout=subprocess.PIPE)  # "-opt.fzn.output_var_file="+model_fn+"_vars.txt",
+    # output = result.stdout.decode('utf-8')
     # print(output)
 
     # In[543]:
@@ -179,8 +186,8 @@ def idr_query(SQL, return_data):
 
     # clean up TODO Complete the cleanup
     os.remove(model_fn + ".mzn")
-    os.remove(model_fn + ".ozn")
-    os.remove(model_fn + ".fzn")
+    # os.remove(model_fn + ".ozn")
+    # os.remove(model_fn + ".fzn")
 
     # Put output into a list of dict as data ready to run
 

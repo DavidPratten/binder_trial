@@ -5,12 +5,12 @@ def query_idr(line, cell):
     display(Markdown(idr_query(cell, 'markdown table')))
 def query_test(line, cell):
     print("""def test_idr_"""+hashlib.sha1(cell.strip().encode()).hexdigest()[:10]+"""():
-    res = idr_query(\"\"\""""+cell+"""\"\"\", True)
+    res = idr_query(\"\"\""""+cell+"""\"\"\", 'data')
     assert sorted_res(res) == sorted_res("""+str(idr_query(cell, 'data'))+""")""")
 def show_idr(line, cell):
-    display(Markdown("```\n\n"+idr_query(cell, 'model')+"\n```"))
+    display(Markdown("```\n\n"+idr_query('select * from '+cell.strip(), 'model')+"\n```"))
 def show_constrained_idr(line, cell):
-    display(Markdown("```\n\n"+idr_query(cell, 'constrained model')+"\n```"))
+    display(Markdown("```\n\n"+idr_query('select * from '+cell.strip(), 'constrained model')+"\n```"))
 def load_ipython_extension(ipython):
     """This function is called when the extension is
     loaded. It accepts an IPython InteractiveShell
