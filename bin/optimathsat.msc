@@ -52,6 +52,12 @@
       "Print (sub-optimal) solutions of input formula along the optimization search. Depending on configuration, a solution may be printed multiple times.",
       "bool",
       "false"
+    ],
+    [
+      "-input",
+      "Select input language. Can be `smt', `smt2', 'dimacs' or 'fzn'."
+      "opt:smt:smt2:dimacs:fzn"
+      "smt"
     ]
   ],
   "supportsMzn": false,
