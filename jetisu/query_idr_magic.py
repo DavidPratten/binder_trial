@@ -10,7 +10,7 @@ def query_test(line, cell):
 def show_idr(line, cell):
     display(Markdown("```\n\n"+idr_query('select * from '+cell.strip(), 'model')+"\n```"))
 def show_constrained_idr(line, cell):
-    display(Markdown("```\n\n"+idr_query('select * from '+cell.strip(), 'constrained model')+"\n```"))
+    display(Markdown("```\n\n"+idr_query(cell, 'constrained model')+"\n```"))
 def load_ipython_extension(ipython):
     """This function is called when the extension is
     loaded. It accepts an IPython InteractiveShell

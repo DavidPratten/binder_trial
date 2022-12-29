@@ -98,7 +98,8 @@ def idr_query(sql_query, return_data):
 
     canonical_table_name = table_name.lower()
     model = idr_read_model(canonical_table_name)
-
+    if return_data == 'model':
+        return model
     # Merge in the constraints in the query to get the model to be fed to MiniZinc
 
     parameters = re.search(r"predicate +" + canonical_table_name + r" *\(([^)]+?)\)", model, re.S)[1].lower()
@@ -107,22 +108,21 @@ def idr_query(sql_query, return_data):
         [x.split(":")[1] for x in parameters.split(",")]) + ');'
 
     where_clause_data = '; '.join([(x + "= true" if len(x.split("=")) == 1 else x) for x in
-                                   where_clause.lower().replace("where", "").split("and")])
-    constrained_model = model + "\n" + variables + "\n" + primary_constraint + "\n" + where_clause_data + ";"
+                                   where_clause.lower().replace("where", "").split("and")]) if where_clause else ''
+    constrained_model = model + "\n" + variables + "\n" + primary_constraint + "\n" + (where_clause_data + ";" if where_clause_data else '')
     model_fn = tempfile.NamedTemporaryFile().name
     mf = open(model_fn + ".mzn", 'w')
     mf.write(constrained_model)
     mf.close()
+    if return_data == 'constrained model':
+        return constrained_model
 
-    # Run MiniZinc model and save result
-
+    # Run MiniZinc model and save result, starting with the opitmathsat solver
     path_to_minizinc = "C:/Program Files/MiniZinc/minizinc" if sys.platform.startswith('win32') else "/usr/bin/minizinc"
-
     result = subprocess.run(
         [path_to_minizinc, "--solver", "optimathsat", model_fn + ".mzn"],
         stdout=subprocess.PIPE)
     output = result.stdout.decode('utf-8')
-
     data_output = []
     data = False
     column = []
@@ -142,6 +142,29 @@ def idr_query(sql_query, return_data):
                 x = line.replace(";", "").split("=")
                 column.append('"' + x[0].strip() + '": ' + x[1].strip())
     solver_data = json.loads('[' + ', '.join(data_output) + ']')
+
+    # and if there is no result, then try with optimathsat
+    if not solver_data:
+        result = subprocess.run(
+            [path_to_minizinc, model_fn + ".mzn"],
+            stdout=subprocess.PIPE)
+        output = result.stdout.decode('utf-8')
+        data_output = []
+        data = False
+        column = []
+        for line in output.splitlines():
+            if line == "----------":
+                data_output.append('{' + ', '.join(column) + '}')
+                column = []
+            elif line == "==========":
+                pass
+            else:
+                x = line.replace(";", "").split("=")
+                column.append('"' + x[0].strip() + '": ' + x[1].strip())
+        solver_data = json.loads('[' + ', '.join(data_output) + ']')
+
+    if not solver_data:
+        pass # TODO https://github.com/tobymao/sqlglot/issues/863 no way to pass in empty tables into execute at present. Gives an error.
     # print(solver_data)
 
     os.remove(model_fn + ".mzn")
@@ -149,7 +172,7 @@ def idr_query(sql_query, return_data):
     # Put output into a list of dict as data ready to run
 
     table_input = {table_name.lower(): [x | eq_constraints for x in solver_data]}  # | eq_constraints
-
+    # print(table_input)
     # Run the query
     res = execute(
         sql_query,
@@ -162,10 +185,6 @@ def idr_query(sql_query, return_data):
         return '|' + '|'.join(res.columns) + '|' + "\n" + '|' + '|'.join(
             ["----" for x in res.columns]) + '|' + "\n" + "\n".join(
             ['|' + '|'.join([str(val) for val in r]) + '|' for r in res.rows])
-    elif return_data == 'model':
-        return model
-    elif return_data == 'constrained model':
-        return constrained_model
     else:
         return 'Programming error - this should never occur'
 
