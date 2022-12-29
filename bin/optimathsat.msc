@@ -3,13 +3,7 @@
   "name": "Optimathsat",
   "description": "Optimathsat",
   "version": "1.7.3",
-  "executable": [
-    "/usr/bin/optimathsat",
-    "-input=fzn",
-	"-opt.fzn.all_solutions=true",
-	"-opt.fzn.finite_precision=12",
-	"-opt.fzn.finite_precision_model=true"
-  ],
+  "executable": "/usr/bin/optimathsat",
   "extraFlags": [
     [
       "-opt.fzn.all_solutions",
