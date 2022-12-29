@@ -56,7 +56,7 @@
     [
       "-input",
       "Select input language. Can be `smt', `smt2', 'dimacs' or 'fzn'."
-      "opt:smt:smt2:dimacs:fzn"
+      "string"
       "smt"
     ]
   ],
