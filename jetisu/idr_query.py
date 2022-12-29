@@ -145,7 +145,7 @@ def idr_query(SQL, return_data):
     #     'win32') else "/usr/bin/optimathsat"
     # print(constrained_model)
     result = subprocess.run(
-        [path_to_minizinc, "--solver", "optimathsat"].append(additional_calling_parameters).append(model_fn + ".mzn"),
+        [path_to_minizinc, "--solver", "optimathsat"] + additional_calling_parameters + [model_fn + ".mzn"],
         stdout=subprocess.PIPE)
     output = result.stdout.decode('utf-8')
     # print('here', output)
