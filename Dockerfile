@@ -29,6 +29,9 @@ RUN rm /home/${NB_USER}/requirements.txt
 COPY bin/optimathsat /usr/bin
 RUN chmod 755 /usr/bin/optimathsat
 COPY bin/optimathsat.msc /usr/share/minizinc/solvers/
+COPY bin/optimathsat.sh /usr/share/minizinc/solvers/
+RUN chmod 755 /usr/bin/optimathsat.sh
+
 # Install ACT_Conveyance_Duty.ipynb
 RUN mkdir /home/${NB_USER}/jetisu
 COPY jetisu/query_idr_magic.py /home/${NB_USER}/jetisu/

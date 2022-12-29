@@ -3,7 +3,7 @@
   "name": "Optimathsat",
   "description": "Optimathsat",
   "version": "1.7.3",
-  "executable": "/usr/bin/optimathsat",
+  "executable": "/usr/bin/optimathsat.sh",
   "extraFlags": [
     [
       "-opt.fzn.all_solutions",
