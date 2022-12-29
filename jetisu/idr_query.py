@@ -136,15 +136,12 @@ def idr_query(SQL, return_data):
     # In[541]:
 
     path_to_minizinc = "C:/Program Files/MiniZinc/minizinc" if sys.platform.startswith('win32') else "/usr/bin/minizinc"
-    additional_calling_parameters = [] if sys.platform.startswith('win32') else ["-input", "fzn",
-                                                                                 "-opt.fzn.all_solutions=true",
-                                                                                 "-opt.fzn.finite_precision=12",
-                                                                                 "-opt.fzn.finite_precision_model=true"]
+
     # path_to_optimathsat = "C:/Program Files/MiniZinc/bin/optimathsat" if sys.platform.startswith(
     #     'win32') else "/usr/bin/optimathsat"
     # print(constrained_model)
     result = subprocess.run(
-        [path_to_minizinc, "--solver", "optimathsat"] + additional_calling_parameters + [model_fn + ".mzn"],
+        [path_to_minizinc, "--solver", "optimathsat", model_fn + ".mzn"],
         stdout=subprocess.PIPE)
     output = result.stdout.decode('utf-8')
     # print('here', output)
