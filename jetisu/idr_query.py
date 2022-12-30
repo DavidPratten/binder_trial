@@ -103,6 +103,7 @@ def idr_query(sql_query, return_data):
     # Merge in the constraints in the query to get the model to be fed to MiniZinc
 
     parameters = re.search(r"predicate +" + canonical_table_name + r" *\(([^)]+?)\)", model, re.S)[1].lower()
+    typed_parameters_list = [[y.lower().replace('var','').strip() for y in x.split(":")] for x in parameters.split(",")]
     variables = parameters.replace(",", ";") + ";"
     primary_constraint = 'constraint ' + canonical_table_name + '(' + ', '.join(
         [x.split(":")[1] for x in parameters.split(",")]) + ');'
@@ -114,6 +115,12 @@ def idr_query(sql_query, return_data):
     mf = open(model_fn + ".mzn", 'w')
     mf.write(constrained_model)
     mf.close()
+
+    schema_cols = {}
+    for c in typed_parameters_list:
+        schema_cols[c[1]] = c[0]
+    schema = {canonical_table_name: schema_cols}
+
     if return_data == 'constrained model':
         return constrained_model
 
@@ -163,19 +170,18 @@ def idr_query(sql_query, return_data):
                 column.append('"' + x[0].strip() + '": ' + x[1].strip())
         solver_data = json.loads('[' + ', '.join(data_output) + ']')
 
-    if not solver_data:
-        pass # TODO https://github.com/tobymao/sqlglot/issues/863 no way to pass in empty tables into execute at present. Gives an error.
-    # print(solver_data)
-
     os.remove(model_fn + ".mzn")
 
-    # Put output into a list of dict as data ready to run
+    if not solver_data:
+        table_input = {canonical_table_name: []}
+    else:
+        # Put output into a list of dict as data ready to run
+        table_input = {table_name.lower(): [x | eq_constraints for x in solver_data]}  # | eq_constraints
 
-    table_input = {table_name.lower(): [x | eq_constraints for x in solver_data]}  # | eq_constraints
-    # print(table_input)
     # Run the query
     res = execute(
         sql_query,
+        schema=schema,
         tables=table_input
     )
 
