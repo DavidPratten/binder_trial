@@ -7,7 +7,7 @@ Jetisu is a toolset for modelling with __intensionally defined relations__.
 The examples are chosen to illustrate the benefits (and/or challenges) of using intensionally defined relations to model rules as code.
 - [ACT Conveyance Duty](ACT_Conveyance_Duty.ipynb)
 - [Australian GST](Australian_GST.ipynb)
-- [Birthday Money](Birthday Money.ipynb)
+- [Birthday Money](Birthday%20Money.ipynb)
 - [Range](Range.ipynb)
 ## Edit and re-run the example notebooks
 You can  ```docker run``` the example Jupyter notebooks for yourself.
